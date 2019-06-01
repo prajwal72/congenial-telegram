@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">congenial telegram</string>
+    <string name="sign_in">SIGN IN</string>
+    <string name="password">Password</string>
+    <string name="email">email</string>
+    <string name="create_an_account">Create an Account</string>
+    <string name="name">Name</string>
+    <string name="sign_in_instead">Sign in instead?</string>
+    <string name="sign_up">SIGN UP</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="email_verification_message">Please veriy your email and sign in</string>
+</resources>
