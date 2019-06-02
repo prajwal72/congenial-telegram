@@ -87,8 +87,10 @@ public class ChangeProfilePictureActivity extends AppCompatActivity {
     private void uploadImage(@Nullable Intent data) {
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
         Uri selectedImage = null;
+
         if(data != null)
             selectedImage = data.getData();
+
         if(selectedImage != null){
             final String uid = firebaseUser.getUid();
             String randomString;
@@ -135,8 +137,6 @@ public class ChangeProfilePictureActivity extends AppCompatActivity {
                 }
             });
 
-        }else {
-            Log.e("hh","kk");
         }
     }
 }
