@@ -9,4 +9,6 @@
     <string name="sign_up">SIGN UP</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="email_verification_message">Please veriy your email and sign in</string>
+    <string name="upload">UPLOAD</string>
+    <string name="remove">REMOVE</string>
 </resources>
