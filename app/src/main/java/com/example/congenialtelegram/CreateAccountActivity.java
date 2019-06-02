@@ -16,6 +16,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class CreateAccountActivity extends AppCompatActivity {
 
@@ -67,10 +69,15 @@ public class CreateAccountActivity extends AppCompatActivity {
                             FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
                             if(firebaseUser == null)
                                 return;
+                            String uid = firebaseUser.getUid();
+                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+
+                            databaseReference.child(uid).child("profile_pic").setValue("null");
                             UserProfileChangeRequest request = new UserProfileChangeRequest.Builder()
                                     .setDisplayName(name)
                                     .build();
                             firebaseUser.updateProfile(request);
+
                             verifyEmail();
                             startActivity(new Intent(CreateAccountActivity.this, LoginActivity.class));
                         }
