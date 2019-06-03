@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class CreateAccountActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,12 +36,14 @@ public class CreateAccountActivity extends AppCompatActivity {
         final EditText confirmPasswordView = findViewById(R.id.confirm_signup_password);
         Button signUpButton = findViewById(R.id.signup_button);
         TextView signInButton = findViewById(R.id.back_button);
+        progressBar = findViewById(R.id.progressBar);
 
         firebaseAuth = FirebaseAuth.getInstance();
 
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
                 String name = nameView.getText().toString().trim();
                 String email = emailView.getText().toString().trim();
                 String password1 = passwordView.getText().toString().trim();

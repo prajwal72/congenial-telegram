@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Button button = findViewById(R.id.button);
+        Button button2 = findViewById(R.id.button2);
 
         firebaseAuth = FirebaseAuth.getInstance();
         button.setOnClickListener(new View.OnClickListener() {
@@ -25,6 +26,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 firebaseAuth.signOut();
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            }
+        });
+
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ChangeProfilePictureActivity.class));
             }
         });
     }
