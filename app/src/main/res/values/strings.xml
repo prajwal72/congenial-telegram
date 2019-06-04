@@ -15,4 +15,11 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="tool_title">lorem ipsum dolor sit amet</string>
+    <string name="tool_author">Lorem Ipsum</string>
+    <string name="tool_date_time">Jan 1 at 2:00 AM</string>
+    <string name="like">LIKE</string>
+    <string name="comment">Comment</string>
+    <string name="share">Share</string>
+    <string name="tools_likes_comments">3 likes 2 comments</string>
 </resources>
