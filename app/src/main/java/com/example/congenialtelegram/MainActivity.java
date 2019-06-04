@@ -1,39 +1,49 @@
 package com.example.congenialtelegram;
 
-import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
+import android.view.MenuItem;
 
-import com.google.firebase.auth.FirebaseAuth;
+import com.example.congenialtelegram.Fragments.Dashboard;
+import com.example.congenialtelegram.Fragments.Settings;
 
 public class MainActivity extends AppCompatActivity {
-
-    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button button = findViewById(R.id.button);
-        Button button2 = findViewById(R.id.button2);
+        loadFragment(Dashboard.newInstance());
 
-        firebaseAuth = FirebaseAuth.getInstance();
-        button.setOnClickListener(new View.OnClickListener() {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onClick(View v) {
-                firebaseAuth.signOut();
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                Fragment fragment;
+                switch (menuItem.getItemId()){
+                    case R.id.dashboard:
+                        fragment = Dashboard.newInstance();
+                        loadFragment(fragment);
+                        return true;
+                    case R.id.settings:
+                        fragment = Settings.newInstance();
+                        loadFragment(fragment);
+                        return true;
+                }
+                return false;
             }
         });
+    }
 
-        button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, ChangeProfilePictureActivity.class));
-            }
-        });
+    private void loadFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }
