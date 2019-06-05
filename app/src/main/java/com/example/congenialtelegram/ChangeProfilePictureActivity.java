@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.congenialtelegram.Models.PostModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,10 +28,12 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.Date;
 import java.util.Random;
 
 public class ChangeProfilePictureActivity extends AppCompatActivity {
 
+    private FirebaseUser firebaseUser;
     private ImageView profileImageView;
     private ProgressBar progressBar;
     private DatabaseReference databaseReference;
@@ -49,10 +52,10 @@ public class ChangeProfilePictureActivity extends AppCompatActivity {
         profileImageView = findViewById(R.id.profileImage);
         progressBar = findViewById(R.id.progressBar);
 
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if(firebaseUser != null)
             uid = firebaseUser.getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference().child(uid).child("profile_pic");
+        databaseReference = FirebaseDatabase.getInstance().getReference().child(uid);
 
         setImage();
 
@@ -73,7 +76,7 @@ public class ChangeProfilePictureActivity extends AppCompatActivity {
         removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                databaseReference.setValue("null");
+                databaseReference.child("profile_pic").setValue("null");
                 Glide.with(ChangeProfilePictureActivity.this)
                         .load(R.drawable.profile_pic)
                         .into(profileImageView);
@@ -85,11 +88,11 @@ public class ChangeProfilePictureActivity extends AppCompatActivity {
     private void setImage() {
         progressBar.setVisibility(View.VISIBLE);
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReference.child("profile_pic").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String url = (String) dataSnapshot.getValue();
-                if(url == "null"){
+                if(url == "null" || url == null){
                     progressBar.setVisibility(View.INVISIBLE);
                     return;
                 }
@@ -133,7 +136,7 @@ public class ChangeProfilePictureActivity extends AppCompatActivity {
             selectedImage = null;
 
         if(selectedImage != null){
-            String randomString;
+            final String randomString;
             Random random =  new Random();
             long rand = random.nextLong();
             randomString = Long.toString(rand);
@@ -155,7 +158,10 @@ public class ChangeProfilePictureActivity extends AppCompatActivity {
                             newReference.getDownloadUrl().addOnSuccessListener(ChangeProfilePictureActivity.this, new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
-                                    databaseReference.setValue(uri.toString());
+                                    Date date = new Date();
+                                    PostModel postModel = new PostModel(randomString, firebaseUser.getDisplayName(), null, uri.toString(), date);
+                                    databaseReference.child("posts").child(randomString).setValue(postModel);
+                                    databaseReference.child("profile_pic").setValue(uri.toString());
                                 }
                             });
 

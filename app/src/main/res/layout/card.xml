@@ -31,7 +31,7 @@
                 >
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/profile_image"
+                    android:id="@+id/profileImage"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     tools:src="@tools:sample/avatars" />
@@ -43,7 +43,7 @@
                     android:padding="8dp">
 
                     <TextView
-                        android:id="@+id/subreddit"
+                        android:id="@+id/author"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
                         android:layout_weight="1"
@@ -53,7 +53,7 @@
                         tools:text="@string/tool_author" />
 
                     <TextView
-                        android:id="@+id/source"
+                        android:id="@+id/date"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
                         android:layout_weight="1"
@@ -65,7 +65,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/title"
+                android:id="@+id/caption"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
@@ -81,6 +81,7 @@
                 tools:src="@tools:sample/avatars[4]" />
 
             <TextView
+                android:id="@+id/info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="4dp"
@@ -99,6 +100,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/like"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -106,6 +108,7 @@
                     android:text="@string/like"/>
 
                 <TextView
+                    android:id="@+id/comment"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -113,6 +116,7 @@
                     android:text="@string/comment"/>
 
                 <TextView
+                    android:id="@+id/share"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
