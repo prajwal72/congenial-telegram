@@ -13,6 +13,11 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.congenialtelegram.Models.PostModel;
 import com.example.congenialtelegram.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,7 +41,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int index) {
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int index) {
         Date date = postModels.get(index).getDate();
         SimpleDateFormat formatter = new SimpleDateFormat("MMM dd");
         String strDate = formatter.format(date);
@@ -44,7 +49,33 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         String strTime = timeFormatter.format(date);
         String time = strDate.concat(" at ").concat(strTime);
 
-        viewHolder.authorView.setText(postModels.get(index).getAuthor());
+        String uid = postModels.get(index).getUid();
+        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child(uid);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String author = (String) dataSnapshot.child("name").getValue();
+                String profileImage = (String) dataSnapshot.child("profile_pic").getValue();
+                viewHolder.authorView.setText(author);
+                if(profileImage != null){
+                    Uri uri = Uri.parse(profileImage);
+                    Glide.with(context)
+                            .load(uri)
+                            .into(viewHolder.profileImageView);
+                }
+                else{
+                    Glide.with(context)
+                            .load(R.drawable.profile_pic)
+                            .into(viewHolder.profileImageView);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         viewHolder.dateView.setText(time);
         if(postModels.get(index).getCaption() != null)
             viewHolder.captionView.setText(postModels.get(index).getCaption());

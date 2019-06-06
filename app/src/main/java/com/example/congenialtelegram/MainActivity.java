@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.congenialtelegram.Fragments.Dashboard;
+import com.example.congenialtelegram.Fragments.Profile;
 import com.example.congenialtelegram.Fragments.Settings;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,6 +29,10 @@ public class MainActivity extends AppCompatActivity {
                 switch (menuItem.getItemId()){
                     case R.id.dashboard:
                         fragment = Dashboard.newInstance();
+                        loadFragment(fragment);
+                        return true;
+                    case R.id.profile:
+                        fragment = Profile.newInstance();
                         loadFragment(fragment);
                         return true;
                     case R.id.settings:

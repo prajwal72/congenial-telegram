@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class PostModel {
     public String id;
-    public String author;
+    public String uid;
     public String caption;
     public String imageUrl;
     public Date date;
@@ -21,16 +21,16 @@ public class PostModel {
 
     }
 
-    public PostModel(String id, String author, String caption, String imageUrl, Date date){
+    public PostModel(String id, String uid, String caption, String imageUrl, Date date){
         this.id = id;
-        this.author = author;
+        this.uid = uid;
         this.caption = caption;
         this.imageUrl = imageUrl;
         this.date = date;
     }
 
-    public String getAuthor() {
-        return author;
+    public String getUid() {
+        return uid;
     }
 
     public String getCaption() {

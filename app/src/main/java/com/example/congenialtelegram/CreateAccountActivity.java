@@ -76,13 +76,16 @@ public class CreateAccountActivity extends AppCompatActivity {
                             String uid = firebaseUser.getUid();
                             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
 
-                            databaseReference.child(uid).child("profile_pic").setValue("null");
+                            databaseReference.child(uid).child("name").setValue(name);
+                            databaseReference.child(uid).child("followers").setValue(0);
+                            databaseReference.child(uid).child("following").setValue(0);
                             UserProfileChangeRequest request = new UserProfileChangeRequest.Builder()
                                     .setDisplayName(name)
                                     .build();
                             firebaseUser.updateProfile(request);
 
                             verifyEmail();
+                            Toast.makeText(CreateAccountActivity.this, "Account Created! Please verify your Email", Toast.LENGTH_LONG).show();
                             startActivity(new Intent(CreateAccountActivity.this, LoginActivity.class));
                         }
                         else{

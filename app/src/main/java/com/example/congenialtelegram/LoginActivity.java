@@ -88,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         String profilePic = (String) dataSnapshot.getValue();
-                                        if(profilePic!=null && profilePic.equals("null"))
+                                        if(profilePic == null)
                                             startActivity(new Intent(LoginActivity.this, ChangeProfilePictureActivity.class));
                                         else
                                             startActivity(new Intent(LoginActivity.this, MainActivity.class));

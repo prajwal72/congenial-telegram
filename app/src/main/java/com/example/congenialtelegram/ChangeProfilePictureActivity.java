@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -76,7 +77,17 @@ public class ChangeProfilePictureActivity extends AppCompatActivity {
         removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                databaseReference.child("profile_pic").setValue("null");
+                databaseReference.child("profile_pic").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        dataSnapshot.getRef().removeValue();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
                 Glide.with(ChangeProfilePictureActivity.this)
                         .load(R.drawable.profile_pic)
                         .into(profileImageView);
@@ -92,7 +103,7 @@ public class ChangeProfilePictureActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String url = (String) dataSnapshot.getValue();
-                if(url == "null" || url == null){
+                if(url == null){
                     progressBar.setVisibility(View.INVISIBLE);
                     return;
                 }
@@ -159,9 +170,13 @@ public class ChangeProfilePictureActivity extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     Date date = new Date();
-                                    PostModel postModel = new PostModel(randomString, firebaseUser.getDisplayName(), null, uri.toString(), date);
+                                    PostModel postModel = new PostModel(randomString, firebaseUser.getUid(), null, uri.toString(), date);
                                     databaseReference.child("posts").child(randomString).setValue(postModel);
                                     databaseReference.child("profile_pic").setValue(uri.toString());
+                                    UserProfileChangeRequest request = new UserProfileChangeRequest.Builder()
+                                            .setPhotoUri(uri)
+                                            .build();
+                                    firebaseUser.updateProfile(request);
                                 }
                             });
 
