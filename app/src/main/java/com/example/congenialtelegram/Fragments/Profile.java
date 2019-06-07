@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.example.congenialtelegram.Adapters.PostAdapter;
 import com.example.congenialtelegram.EditProfileActivity;
 import com.example.congenialtelegram.Models.PostModel;
+import com.example.congenialtelegram.PostActivity;
 import com.example.congenialtelegram.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -44,6 +45,7 @@ public class Profile extends Fragment {
     private TextView followingView;
     private Button editProfile;
     private Context context;
+    private Button postButton;
 
     public Profile() {
         // Required empty public constructor
@@ -65,6 +67,7 @@ public class Profile extends Fragment {
         followerView = view.findViewById(R.id.followers);
         followingView = view.findViewById(R.id.following);
         editProfile = view.findViewById(R.id.editProfile);
+        postButton = view.findViewById(R.id.postButton);
         context = view.getContext();
         posts = new ArrayList<>();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -77,6 +80,13 @@ public class Profile extends Fragment {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getActivity(), EditProfileActivity.class));
+            }
+        });
+
+        postButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), PostActivity.class));
             }
         });
 

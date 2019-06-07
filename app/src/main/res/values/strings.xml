@@ -32,4 +32,8 @@
     <string name="update">UPDATE</string>
     <string name="update_cover_photo">UPDATE COVER PHOTO</string>
     <string name="update_profile_photo">UPDATE PROFILE PHOTO</string>
+    <string name="write_something_here">Write Something Here...</string>
+    <string name="upload_image">ADD IMAGE</string>
+    <string name="post">POST</string>
+    <string name="discard">DISCARD</string>
 </resources>
