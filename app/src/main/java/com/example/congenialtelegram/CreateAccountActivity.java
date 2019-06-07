@@ -32,6 +32,7 @@ public class CreateAccountActivity extends AppCompatActivity {
 
         final EditText nameView = findViewById(R.id.signup_name);
         final EditText emailView = findViewById(R.id.signup_email);
+        final EditText mobileView = findViewById(R.id.signup_mobile);
         final EditText passwordView = findViewById(R.id.signup_password);
         final EditText confirmPasswordView = findViewById(R.id.confirm_signup_password);
         Button signUpButton = findViewById(R.id.signup_button);
@@ -48,8 +49,9 @@ public class CreateAccountActivity extends AppCompatActivity {
                 String email = emailView.getText().toString().trim();
                 String password1 = passwordView.getText().toString().trim();
                 String password2 = confirmPasswordView.getText().toString().trim();
+                String mobile = mobileView.getText().toString().trim();
 
-                SignUp(name, email, password1, password2);
+                SignUp(name, email, password1, password2, mobile);
             }
         });
 
@@ -61,7 +63,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         });
     }
 
-    private void SignUp(final String name, String email, String password1, String password2) {
+    private void SignUp(final String name, String email, String password1, String password2, final String mobile) {
         if(!validate(name, email, password1, password2))
             return;
 
@@ -77,8 +79,10 @@ public class CreateAccountActivity extends AppCompatActivity {
                             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
 
                             databaseReference.child(uid).child("name").setValue(name);
+                            databaseReference.child(uid).child("mobile").setValue(mobile);
                             databaseReference.child(uid).child("followers").setValue(0);
                             databaseReference.child(uid).child("following").setValue(0);
+                            databaseReference.child("mobile").child(mobile).setValue(uid);
                             UserProfileChangeRequest request = new UserProfileChangeRequest.Builder()
                                     .setDisplayName(name)
                                     .build();

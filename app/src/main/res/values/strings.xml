@@ -27,4 +27,9 @@
     <string name="dashboard">Dashboard</string>
     <string name="edit_profile">EDIT PROFILE</string>
     <string name="tool_following">3 Following</string>
+    <string name="mobile">Mobile Number</string>
+    <string name="about_me">About Me</string>
+    <string name="update">UPDATE</string>
+    <string name="update_cover_photo">UPDATE COVER PHOTO</string>
+    <string name="update_profile_photo">UPDATE PROFILE PHOTO</string>
 </resources>

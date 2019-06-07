@@ -19,6 +19,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <Button
+            android:id="@+id/coverPic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/update_cover_photo"/>
+
+        <Button
+            android:id="@+id/profilePic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/update_profile_photo"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -27,7 +39,7 @@
             android:textSize="18sp" />
 
         <EditText
-            android:id="@+id/signup_name"
+            android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
@@ -37,80 +49,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="@string/email"
+            android:text="@string/about_me"
             android:textSize="18sp" />
 
         <EditText
-            android:id="@+id/signup_email"
+            android:id="@+id/about"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:inputType="textEmailAddress" />
+            android:inputType="text" />
 
-        <TextView
+        <Button
+            android:id="@+id/updateButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="@string/mobile"
-            android:textSize="18sp" />
-
-        <EditText
-            android:id="@+id/signup_mobile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:inputType="number" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:text="@string/password"
-            android:textSize="18sp" />
-
-        <EditText
-            android:id="@+id/signup_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:inputType="textPassword" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:text="@string/confirm_password"
-            android:textSize="18sp" />
-
-        <EditText
-            android:id="@+id/confirm_signup_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:inputType="textPassword" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/signup_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="@string/sign_up" />
-
-            <TextView
-                android:id="@+id/back_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="8dp"
-                android:gravity="end"
-                android:text="@string/sign_in_instead" />
-
-        </LinearLayout>
+            android:text="@string/update" />
 
     </LinearLayout>
 
@@ -123,10 +77,10 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

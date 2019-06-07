@@ -1,6 +1,7 @@
 package com.example.congenialtelegram.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,11 +11,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.congenialtelegram.Adapters.PostAdapter;
+import com.example.congenialtelegram.EditProfileActivity;
 import com.example.congenialtelegram.Models.PostModel;
 import com.example.congenialtelegram.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,6 +42,7 @@ public class Profile extends Fragment {
     private TextView aboutView;
     private TextView followerView;
     private TextView followingView;
+    private Button editProfile;
     private Context context;
 
     public Profile() {
@@ -60,6 +64,7 @@ public class Profile extends Fragment {
         aboutView = view.findViewById(R.id.about);
         followerView = view.findViewById(R.id.followers);
         followingView = view.findViewById(R.id.following);
+        editProfile = view.findViewById(R.id.editProfile);
         context = view.getContext();
         posts = new ArrayList<>();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -67,6 +72,13 @@ public class Profile extends Fragment {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setNestedScrollingEnabled(false);
+
+        editProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), EditProfileActivity.class));
+            }
+        });
 
         setIntro();
 
@@ -84,6 +96,7 @@ public class Profile extends Fragment {
                 String url = (String) dataSnapshot.child(uid).child("cover_pic").getValue();
                 if(url != null){
                     Uri uri = Uri.parse(url);
+                    coverView.setBackground(null);
                     Glide.with(context)
                             .load(uri)
                             .into(coverView);
