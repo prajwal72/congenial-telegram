@@ -137,11 +137,11 @@ public class Profile extends Fragment {
                 if(about != null)
                     aboutView.setText(about);
 
-                long numberOfFollowers = (long) dataSnapshot.child(uid).child("followers").getValue();
+                long numberOfFollowers = (long) dataSnapshot.child(uid).child("numberfollowers").getValue();
                 String followers = Long.toString(numberOfFollowers).concat(" Followers");
                 followerView.setText(followers);
 
-                long numberOfFollowing = (long) dataSnapshot.child(uid).child("following").getValue();
+                long numberOfFollowing = (long) dataSnapshot.child(uid).child("numberfollowing").getValue();
                 String following = Long.toString(numberOfFollowing).concat(" Following");
                 followingView.setText(following);
             }

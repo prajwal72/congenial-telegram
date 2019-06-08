@@ -26,6 +26,7 @@ public class Dashboard extends Fragment {
 
     private ArrayList<PostModel> posts;
     private RecyclerView recyclerView;
+    private ArrayList<String> uids;
 
     public Dashboard() {
         // Required empty public constructor
@@ -52,15 +53,34 @@ public class Dashboard extends Fragment {
     private void getPosts() {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-        final String uid = firebaseUser.getUid();
+        final String userUid = firebaseUser.getUid();
+        uids = new ArrayList<>();
+        uids.add(userUid);
+
+        databaseReference.child(userUid).child("following").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot ds: dataSnapshot.getChildren()){
+                    String uid = (String) ds.getValue();
+                    uids.add(uid);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                DataSnapshot data = dataSnapshot.child(uid).child("posts");
-                for(DataSnapshot ds: data.getChildren()){
-                    PostModel post = ds.getValue(PostModel.class);
-                    posts.add(post);
+                for(String id: uids){
+                    DataSnapshot data = dataSnapshot.child(id).child("posts");
+                    for(DataSnapshot ds: data.getChildren()){
+                        PostModel post = ds.getValue(PostModel.class);
+                        posts.add(post);
+                    }
                 }
                 PostAdapter postAdapter = new PostAdapter(posts);
                 recyclerView.setAdapter(postAdapter);
