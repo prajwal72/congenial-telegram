@@ -36,7 +36,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         context = viewGroup.getContext();
-        View view = LayoutInflater.from(context).inflate(R.layout.card, viewGroup, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.post, viewGroup, false);
         return new ViewHolder(view, context, postModels);
     }
 
@@ -112,7 +112,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             dateView = itemView.findViewById(R.id.date);
             captionView = itemView.findViewById(R.id.caption);
             imageView = itemView.findViewById(R.id.image);
-            profileImageView= itemView.findViewById(R.id.profileImage);
+            profileImageView = itemView.findViewById(R.id.profileImage);
             infoView = itemView.findViewById(R.id.info);
             likeButton = itemView.findViewById(R.id.like);
             commentButton = itemView.findViewById(R.id.comment);

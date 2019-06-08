@@ -36,4 +36,5 @@
     <string name="upload_image">ADD IMAGE</string>
     <string name="post">POST</string>
     <string name="discard">DISCARD</string>
+    <string name="users">Users</string>
 </resources>
