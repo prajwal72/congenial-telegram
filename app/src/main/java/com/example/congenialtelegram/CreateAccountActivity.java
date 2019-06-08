@@ -80,8 +80,9 @@ public class CreateAccountActivity extends AppCompatActivity {
 
                             databaseReference.child(uid).child("name").setValue(name);
                             databaseReference.child(uid).child("mobile").setValue(mobile);
-                            databaseReference.child(uid).child("followers").setValue(0);
-                            databaseReference.child(uid).child("following").setValue(0);
+                            databaseReference.child(uid).child("numberfollowers").setValue(0);
+                            databaseReference.child(uid).child("numberfollowing").setValue(0);
+                            databaseReference.child("users").child(uid).setValue(uid);
                             databaseReference.child("mobile").child(mobile).setValue(uid);
                             UserProfileChangeRequest request = new UserProfileChangeRequest.Builder()
                                     .setDisplayName(name)
