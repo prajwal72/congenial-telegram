@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.example.congenialtelegram.Models.PostModel;
 import com.example.congenialtelegram.ProfileActivity;
 import com.example.congenialtelegram.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -100,9 +101,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         viewHolder.authorView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, ProfileActivity.class);
-                intent.putExtra("uid", uid);
-                context.startActivity(intent);
+                String userUid = FirebaseAuth.getInstance().getUid();
+                if(!uid.equals(userUid)){
+                    Intent intent = new Intent(context, ProfileActivity.class);
+                    intent.putExtra("uid", uid);
+                    intent.putExtra("follows", true);
+                    context.startActivity(intent);
+                }
             }
         });
     }

@@ -7,12 +7,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.congenialtelegram.Adapters.PostAdapter;
+import com.example.congenialtelegram.Fragments.Profile;
 import com.example.congenialtelegram.Models.PostModel;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -20,6 +23,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
+import static com.example.congenialtelegram.R.drawable.ic_check;
+import static com.example.congenialtelegram.R.drawable.ic_person_add;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -32,7 +40,11 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView aboutView;
     private TextView followerView;
     private TextView followingView;
+    private ImageView followButton;
+    private ImageView messageButton;
     private String uid;
+    private boolean bool;
+    private String userUid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +53,8 @@ public class ProfileActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         uid = intent.getExtras().getString("uid");
+        bool = intent.getExtras().getBoolean("follows");
+
 
         recyclerView = findViewById(R.id.recyclerView);
         coverView = findViewById(R.id.coverPic);
@@ -49,14 +63,30 @@ public class ProfileActivity extends AppCompatActivity {
         aboutView = findViewById(R.id.about);
         followerView = findViewById(R.id.followers);
         followingView = findViewById(R.id.following);
+        followButton = findViewById(R.id.followButton);
+        messageButton = findViewById(R.id.messageButton);
+        userUid = FirebaseAuth.getInstance().getUid();
+
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        setIntro();
+
+        followButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(bool)
+                    unfollow();
+                else
+                    follow();
+
+                bool = !bool;
+            }
+        });
+
 
         posts = new ArrayList<>();
-        databaseReference = FirebaseDatabase.getInstance().getReference();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(ProfileActivity.this));
         recyclerView.setNestedScrollingEnabled(false);
-
-        setIntro();
 
         getPosts();
     }
@@ -114,17 +144,27 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        if(bool){
+            followButton.setImageDrawable(getResources().getDrawable(ic_check));
+        }
+
     }
 
     private void getPosts() {
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReference.child(uid).child("posts").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                DataSnapshot data = dataSnapshot.child(uid).child("posts");
+                DataSnapshot data = dataSnapshot;
                 for(DataSnapshot ds: data.getChildren()){
                     PostModel post = ds.getValue(PostModel.class);
                     posts.add(post);
                 }
+                Collections.sort(posts, new Comparator<PostModel>() {
+                    @Override
+                    public int compare(PostModel o1, PostModel o2) {
+                        return o2.getDate().compareTo(o1.getDate());
+                    }
+                });
                 PostAdapter postAdapter = new PostAdapter(posts);
                 recyclerView.setAdapter(postAdapter);
             }
@@ -134,5 +174,51 @@ public class ProfileActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void follow(){
+        followButton.setImageDrawable(getResources().getDrawable(ic_check));
+
+        databaseReference.child(userUid).child("following").child(uid).setValue(uid);
+        databaseReference.child(uid).child("followers").child(userUid).setValue(userUid);
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                long number = (long) dataSnapshot.child(userUid).child("numberfollowing").getValue();
+                databaseReference.child(userUid).child("numberfollowing").setValue(number + 1);
+                long number2 = (long) dataSnapshot.child(uid).child("numberfollowers").getValue();
+                databaseReference.child(uid).child("numberfollowers").setValue(number2 + 1);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void unfollow(){
+        followButton.setImageDrawable(getResources().getDrawable(ic_person_add));
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                dataSnapshot.child(userUid).child("following").child(uid).getRef().removeValue();
+                dataSnapshot.child(uid).child("followers").child(userUid).getRef().removeValue();
+                long number = (long) dataSnapshot.child(userUid).child("numberfollowing").getValue();
+                databaseReference.child(userUid).child("numberfollowing").setValue(number - 1);
+                long number2 = (long) dataSnapshot.child(uid).child("numberfollowers").getValue();
+                databaseReference.child(uid).child("numberfollowers").setValue(number2 - 1);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public int getImage(String imageName) {
+        int drawableResourceId = this.getResources().getIdentifier(imageName, "drawable", this.getPackageName());
+        return drawableResourceId;
     }
 }

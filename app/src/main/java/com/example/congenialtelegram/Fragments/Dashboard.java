@@ -21,7 +21,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -58,11 +57,13 @@ public class Dashboard extends Fragment {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
         final String userUid = firebaseUser.getUid();
         uids = new ArrayList<>();
-        uids.add(userUid);
 
         databaseReference.child(userUid).child("following").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                uids.clear();
+                posts.clear();
+                uids.add(userUid);
                 for(DataSnapshot ds: dataSnapshot.getChildren()){
                     String uid = (String) ds.getValue();
                     uids.add(uid);
@@ -78,6 +79,7 @@ public class Dashboard extends Fragment {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                posts.clear();
                 for(String id: uids){
                     DataSnapshot data = dataSnapshot.child(id).child("posts");
                     for(DataSnapshot ds: data.getChildren()){

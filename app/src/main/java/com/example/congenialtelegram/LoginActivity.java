@@ -114,7 +114,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         if(password.length() < 8){
-            Toast.makeText(this,"Password should be minimum 8 characters", Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"Incorrect Password", Toast.LENGTH_LONG).show();
             return false;
         }
 

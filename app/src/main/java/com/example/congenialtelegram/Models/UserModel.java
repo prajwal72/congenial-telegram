@@ -13,10 +13,6 @@ public class UserModel {
         this.isFriend = isFriend;
     }
 
-    public void setFriend(boolean friend) {
-        isFriend = friend;
-    }
-
     public String getUid() {
         return uid;
     }

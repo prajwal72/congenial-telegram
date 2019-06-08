@@ -48,11 +48,37 @@
             tools:text="@string/tool_title"/>
 
         <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/about">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/followButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:src="@drawable/ic_person_add"/>
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/messageButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:src="@drawable/ic_chat"/>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
-            android:layout_below="@+id/about"
+            android:layout_below="@+id/linearLayout2"
             android:orientation="horizontal">
 
             <TextView
