@@ -150,8 +150,12 @@ public class PostActivity extends AppCompatActivity {
         randomString = Long.toString(rand);
 
         String caption = captionEdit.getText().toString().trim();
-        Date date = new Date();
-        PostModel postModel = new PostModel(randomString, firebaseUser.getUid(), caption, url, date);
-        databaseReference.child("posts").child(randomString).setValue(postModel);
+        if(caption == null && url == null)
+            startActivity(new Intent(PostActivity.this, MainActivity.class));
+        else{
+            Date date = new Date();
+            PostModel postModel = new PostModel(randomString, firebaseUser.getUid(), caption, url, date);
+            databaseReference.child("posts").child(randomString).setValue(postModel);
+        }
     }
 }

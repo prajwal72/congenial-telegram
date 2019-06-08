@@ -1,6 +1,8 @@
 package com.example.congenialtelegram.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.congenialtelegram.Models.PostModel;
+import com.example.congenialtelegram.ProfileActivity;
 import com.example.congenialtelegram.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -49,7 +52,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         String strTime = timeFormatter.format(date);
         String time = strDate.concat(" at ").concat(strTime);
 
-        String uid = postModels.get(index).getUid();
+        final String uid = postModels.get(index).getUid();
         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child(uid);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -79,6 +82,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         viewHolder.dateView.setText(time);
         if(postModels.get(index).getCaption() != null)
             viewHolder.captionView.setText(postModels.get(index).getCaption());
+        else
+            viewHolder.captionView.setText(null);
         if(postModels.get(index).getImageUrl() != null){
             String url = postModels.get(index).getImageUrl();
             Uri uri = Uri.parse(url);
@@ -86,7 +91,20 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                     .load(uri)
                     .into(viewHolder.imageView);
         }
+        else{
+            Glide.with(context)
+                    .load((Bitmap) null)
+                    .into(viewHolder.imageView);
+        }
 
+        viewHolder.authorView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ProfileActivity.class);
+                intent.putExtra("uid", uid);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

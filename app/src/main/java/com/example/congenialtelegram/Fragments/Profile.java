@@ -30,6 +30,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class Profile extends Fragment {
 
@@ -165,6 +167,12 @@ public class Profile extends Fragment {
                     PostModel post = ds.getValue(PostModel.class);
                     posts.add(post);
                 }
+                Collections.sort(posts, new Comparator<PostModel>() {
+                    @Override
+                    public int compare(PostModel o1, PostModel o2) {
+                        return o2.getDate().compareTo(o1.getDate());
+                    }
+                });
                 PostAdapter postAdapter = new PostAdapter(posts);
                 recyclerView.setAdapter(postAdapter);
             }

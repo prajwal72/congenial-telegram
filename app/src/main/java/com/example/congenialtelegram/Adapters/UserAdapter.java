@@ -99,7 +99,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                 viewHolder.checkButton.setVisibility(View.VISIBLE);
                 viewHolder.checkButton.setEnabled(true);
                 databaseReference.child(userUid).child("following").child(uid).setValue(uid);
-                Toast.makeText(context, "followed", Toast.LENGTH_LONG).show();
+                databaseReference.child(uid).child("followers").child(userUid).setValue(userUid);
                 userModels.set(i,new UserModel(uid, true));
             }
         });
@@ -112,10 +112,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                 viewHolder.checkButton.setVisibility(View.GONE);
                 viewHolder.checkButton.setEnabled(false);
                 userModels.set(i,new UserModel(uid, false));
-                databaseReference.child(userUid).child("following").addListenerForSingleValueEvent(new ValueEventListener() {
+                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        dataSnapshot.child(uid).getRef().removeValue();
+                        dataSnapshot.child(userUid).child("following").child(uid).getRef().removeValue();
+                        dataSnapshot.child(uid).child("followers").child(userUid).getRef().removeValue();
                     }
 
                     @Override
