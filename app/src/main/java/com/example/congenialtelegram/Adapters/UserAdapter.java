@@ -45,7 +45,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final UserAdapter.ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull final UserAdapter.ViewHolder viewHolder, final int i) {
         final String uid = userModels.get(i).getUid();
         final String userUid = FirebaseAuth.getInstance().getUid();
         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -94,35 +94,37 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         viewHolder.followButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                viewHolder.followButton.setVisibility(View.GONE);
-//                viewHolder.followButton.setEnabled(false);
-//                viewHolder.checkButton.setVisibility(View.VISIBLE);
-//                viewHolder.checkButton.setEnabled(true);
+                viewHolder.followButton.setVisibility(View.GONE);
+                viewHolder.followButton.setEnabled(false);
+                viewHolder.checkButton.setVisibility(View.VISIBLE);
+                viewHolder.checkButton.setEnabled(true);
                 databaseReference.child(userUid).child("following").child(uid).setValue(uid);
                 Toast.makeText(context, "followed", Toast.LENGTH_LONG).show();
+                userModels.set(i,new UserModel(uid, true));
             }
         });
-//
-//        viewHolder.checkButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                viewHolder.followButton.setVisibility(View.VISIBLE);
-//                viewHolder.followButton.setEnabled(true);
-//                viewHolder.checkButton.setVisibility(View.GONE);
-//                viewHolder.checkButton.setEnabled(false);
-//                databaseReference.child(userUid).child("following").addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                        dataSnapshot.child(uid).getRef().removeValue();
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                    }
-//                });
-//            }
-//        });
+
+        viewHolder.checkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewHolder.followButton.setVisibility(View.VISIBLE);
+                viewHolder.followButton.setEnabled(true);
+                viewHolder.checkButton.setVisibility(View.GONE);
+                viewHolder.checkButton.setEnabled(false);
+                userModels.set(i,new UserModel(uid, false));
+                databaseReference.child(userUid).child("following").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        dataSnapshot.child(uid).getRef().removeValue();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
     }
 
     @Override
