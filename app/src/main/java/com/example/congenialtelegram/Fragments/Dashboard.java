@@ -3,6 +3,7 @@ package com.example.congenialtelegram.Fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -29,6 +30,7 @@ public class Dashboard extends Fragment {
     private ArrayList<PostModel> posts;
     private RecyclerView recyclerView;
     private ArrayList<String> uids;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public Dashboard() {
         // Required empty public constructor
@@ -43,7 +45,15 @@ public class Dashboard extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
+        swipeRefreshLayout = view.findViewById(R.id.refresh);
         posts = new ArrayList<>();
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getPosts();
+            }
+        });
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -53,6 +63,7 @@ public class Dashboard extends Fragment {
     }
 
     private void getPosts() {
+        swipeRefreshLayout.setRefreshing(true);
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
         assert firebaseUser != null;
@@ -99,11 +110,12 @@ public class Dashboard extends Fragment {
                 });
                 PostAdapter postAdapter = new PostAdapter(posts);
                 recyclerView.setAdapter(postAdapter);
+                swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
     }
