@@ -58,11 +58,9 @@ public class Dashboard extends Fragment {
         final String userUid = firebaseUser.getUid();
         uids = new ArrayList<>();
 
-        databaseReference.child(userUid).child("following").addValueEventListener(new ValueEventListener() {
+        databaseReference.child(userUid).child("following").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                uids.clear();
-                posts.clear();
                 uids.add(userUid);
                 for(DataSnapshot ds: dataSnapshot.getChildren()){
                     String uid = (String) ds.getValue();
@@ -76,21 +74,25 @@ public class Dashboard extends Fragment {
             }
         });
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 posts.clear();
                 for(String id: uids){
                     DataSnapshot data = dataSnapshot.child(id).child("posts");
+                    String author = (String) dataSnapshot.child(id).child("name").getValue();
+                    String profileImage = (String) dataSnapshot.child(id).child("profile_pic").getValue();
                     for(DataSnapshot ds: data.getChildren()){
                         PostModel post = ds.getValue(PostModel.class);
+                        post.setAuthor(author);
+                        post.setProfileImageUrl(profileImage);
                         posts.add(post);
                     }
                 }
                 Collections.sort(posts, new Comparator<PostModel>() {
                     @Override
                     public int compare(PostModel o1, PostModel o2) {
-                        return o2.getDate().compareTo(o1.getDate());
+                        return o2.getLastModifiedDate().compareTo(o1.getLastModifiedDate());
                     }
                 });
                 PostAdapter postAdapter = new PostAdapter(posts);

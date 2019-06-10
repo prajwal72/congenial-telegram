@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,11 +23,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
@@ -45,7 +50,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int index) {
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int index) {
         Date date = postModels.get(index).getDate();
         SimpleDateFormat formatter = new SimpleDateFormat("MMM dd");
         String strDate = formatter.format(date);
@@ -53,38 +58,33 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         String strTime = timeFormatter.format(date);
         String time = strDate.concat(" at ").concat(strTime);
 
+        final String userUid = FirebaseAuth.getInstance().getUid();
+
         final String uid = postModels.get(index).getUid();
+        final String id = postModels.get(index).getId();
         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child(uid);
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String author = (String) dataSnapshot.child("name").getValue();
-                String profileImage = (String) dataSnapshot.child("profile_pic").getValue();
-                viewHolder.authorView.setText(author);
-                if(profileImage != null){
-                    Uri uri = Uri.parse(profileImage);
-                    Glide.with(context)
-                            .load(uri)
-                            .into(viewHolder.profileImageView);
-                }
-                else{
-                    Glide.with(context)
-                            .load(R.drawable.profile_pic)
-                            .into(viewHolder.profileImageView);
-                }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+        String author = postModels.get(index).getAuthor();
+        String profileImage = postModels.get(index).getProfileImageUrl();
+        viewHolder.authorView.setText(author);
+        if(profileImage != null){
+            Uri uri = Uri.parse(profileImage);
+            Glide.with(context)
+                    .load(uri)
+                    .into(viewHolder.profileImageView);
+        }
+        else{
+            Glide.with(context)
+                    .load(R.drawable.profile_pic)
+                    .into(viewHolder.profileImageView);
+        }
 
         viewHolder.dateView.setText(time);
         if(postModels.get(index).getCaption() != null)
             viewHolder.captionView.setText(postModels.get(index).getCaption());
         else
             viewHolder.captionView.setText(null);
+
         if(postModels.get(index).getImageUrl() != null){
             String url = postModels.get(index).getImageUrl();
             Uri uri = Uri.parse(url);
@@ -110,6 +110,61 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 }
             }
         });
+
+        Map<String, Boolean> likes = postModels.get(index).getLikes();
+        if(likes.containsKey(userUid)){
+            viewHolder.likeButton.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_liked));
+        }
+
+        final boolean[] liked = new boolean[1];
+        viewHolder.likeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final DatabaseReference postRef = databaseReference.child("posts").child(id);
+                postRef.runTransaction(new Transaction.Handler() {
+                    @NonNull
+                    @Override
+                    public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+                        PostModel p = mutableData.getValue(PostModel.class);
+                        if(p == null) {
+                            return Transaction.success(mutableData);
+                        }
+
+                        if(p.likes.containsKey(userUid)){
+                          p.numberOfLikes = p.numberOfLikes - 1;
+                          p.likes.remove(userUid);
+                          liked[0] = false;
+                        }
+                        else {
+                            p.numberOfLikes = p.numberOfLikes + 1;
+                            p.likes.put(userUid, true);
+                            liked[0] = true;
+                        }
+
+                        mutableData.setValue(p);
+                        return Transaction.success(mutableData);
+                    }
+
+                    @Override
+                    public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
+                        Map<String, Boolean> likes = postModels.get(index).getLikes();
+                        if(liked[0] == true){
+                            viewHolder.likeButton.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_liked));
+                            int numberOfLikes = postModels.get(index).getNumberOfLikes() + 1;
+                            postModels.get(index).setNumberOfLikes(numberOfLikes);
+                            likes.put(userUid, true);
+                        }
+                        else{
+                            viewHolder.likeButton.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_like));
+                            int numberOfLikes = postModels.get(index).getNumberOfLikes() - 1;
+                            postModels.get(index).setNumberOfLikes(numberOfLikes);
+                            likes.remove(userUid);
+                        }
+                        postModels.get(index).setLikes(likes);
+                    }
+                });
+            }
+        });
     }
 
     @Override
@@ -125,9 +180,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         private ImageView imageView;
         private ImageView profileImageView;
         private TextView infoView;
-        private TextView likeButton;
-        private TextView commentButton;
-        private TextView shareButton;
+        private ImageButton likeButton;
+        private ImageButton commentButton;
+        private ImageButton shareButton;
 
         public ViewHolder(@NonNull View itemView, Context context, ArrayList<PostModel> postModels) {
             super(itemView);

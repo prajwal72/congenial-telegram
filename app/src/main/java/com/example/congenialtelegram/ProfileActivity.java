@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.congenialtelegram.Adapters.PostAdapter;
-import com.example.congenialtelegram.Fragments.Profile;
 import com.example.congenialtelegram.Models.PostModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -151,18 +150,22 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void getPosts() {
-        databaseReference.child(uid).child("posts").addValueEventListener(new ValueEventListener() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                DataSnapshot data = dataSnapshot;
+                DataSnapshot data = dataSnapshot.child(uid).child("posts");
+                String author = (String) dataSnapshot.child(uid).child("name").getValue();
+                String profileImage = (String) dataSnapshot.child(uid).child("profile_pic").getValue();
                 for(DataSnapshot ds: data.getChildren()){
                     PostModel post = ds.getValue(PostModel.class);
+                    post.setAuthor(author);
+                    post.setProfileImageUrl(profileImage);
                     posts.add(post);
                 }
                 Collections.sort(posts, new Comparator<PostModel>() {
                     @Override
                     public int compare(PostModel o1, PostModel o2) {
-                        return o2.getDate().compareTo(o1.getDate());
+                        return o2.getLastModifiedDate().compareTo(o1.getLastModifiedDate());
                     }
                 });
                 PostAdapter postAdapter = new PostAdapter(posts);
@@ -215,10 +218,5 @@ public class ProfileActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    public int getImage(String imageName) {
-        int drawableResourceId = this.getResources().getIdentifier(imageName, "drawable", this.getPackageName());
-        return drawableResourceId;
     }
 }

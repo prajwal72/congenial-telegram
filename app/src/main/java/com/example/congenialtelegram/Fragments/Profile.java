@@ -159,18 +159,22 @@ public class Profile extends Fragment {
     private void getPosts() {
         final String uid = firebaseUser.getUid();
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 DataSnapshot data = dataSnapshot.child(uid).child("posts");
+                String author = (String) dataSnapshot.child(uid).child("name").getValue();
+                String profileImage = (String) dataSnapshot.child(uid).child("profile_pic").getValue();
                 for(DataSnapshot ds: data.getChildren()){
                     PostModel post = ds.getValue(PostModel.class);
+                    post.setAuthor(author);
+                    post.setProfileImageUrl(profileImage);
                     posts.add(post);
                 }
                 Collections.sort(posts, new Comparator<PostModel>() {
                     @Override
                     public int compare(PostModel o1, PostModel o2) {
-                        return o2.getDate().compareTo(o1.getDate());
+                        return o2.getLastModifiedDate().compareTo(o1.getLastModifiedDate());
                     }
                 });
                 PostAdapter postAdapter = new PostAdapter(posts);
