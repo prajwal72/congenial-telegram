@@ -24,6 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Objects;
 
 import static com.example.congenialtelegram.R.drawable.ic_check;
 import static com.example.congenialtelegram.R.drawable.ic_person_add;
@@ -51,7 +52,7 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         Intent intent = getIntent();
-        uid = intent.getExtras().getString("uid");
+        uid = Objects.requireNonNull(intent.getExtras()).getString("uid");
         bool = intent.getExtras().getBoolean("follows");
 
 
@@ -91,7 +92,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void setIntro() {
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String url = (String) dataSnapshot.child(uid).child("cover_pic").getValue();
@@ -158,6 +159,7 @@ public class ProfileActivity extends AppCompatActivity {
                 String profileImage = (String) dataSnapshot.child(uid).child("profile_pic").getValue();
                 for(DataSnapshot ds: data.getChildren()){
                     PostModel post = ds.getValue(PostModel.class);
+                    assert post != null;
                     post.setAuthor(author);
                     post.setProfileImageUrl(profileImage);
                     posts.add(post);
@@ -165,7 +167,7 @@ public class ProfileActivity extends AppCompatActivity {
                 Collections.sort(posts, new Comparator<PostModel>() {
                     @Override
                     public int compare(PostModel o1, PostModel o2) {
-                        return o2.getLastModifiedDate().compareTo(o1.getLastModifiedDate());
+                        return o2.getDate().compareTo(o1.getDate());
                     }
                 });
                 PostAdapter postAdapter = new PostAdapter(posts);

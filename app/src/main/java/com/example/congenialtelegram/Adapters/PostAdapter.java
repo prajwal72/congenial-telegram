@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.congenialtelegram.ImageViewActivity;
 import com.example.congenialtelegram.Models.PostModel;
 import com.example.congenialtelegram.ProfileActivity;
 import com.example.congenialtelegram.R;
@@ -25,7 +26,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
-import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -98,6 +98,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                     .into(viewHolder.imageView);
         }
 
+        viewHolder.profileImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(postModels.get(index).getImageUrl() != null){
+                    Intent intent = new Intent(context, ImageViewActivity.class);
+                    intent.putExtra("url", postModels.get(index).getProfileImageUrl());
+                    context.startActivity(intent);
+                }
+            }
+        });
+
         viewHolder.authorView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,6 +117,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                     Intent intent = new Intent(context, ProfileActivity.class);
                     intent.putExtra("uid", uid);
                     intent.putExtra("follows", true);
+                    context.startActivity(intent);
+                }
+            }
+        });
+
+        viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(postModels.get(index).getImageUrl() != null){
+                    Intent intent = new Intent(context, ImageViewActivity.class);
+                    intent.putExtra("url", postModels.get(index).getImageUrl());
                     context.startActivity(intent);
                 }
             }
@@ -137,6 +159,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                         }
                         else {
                             p.numberOfLikes = p.numberOfLikes + 1;
+                            assert userUid != null;
                             p.likes.put(userUid, true);
                             liked[0] = true;
                         }
@@ -148,10 +171,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                     @Override
                     public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
                         Map<String, Boolean> likes = postModels.get(index).getLikes();
-                        if(liked[0] == true){
+                        if(liked[0]){
                             viewHolder.likeButton.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_liked));
                             int numberOfLikes = postModels.get(index).getNumberOfLikes() + 1;
                             postModels.get(index).setNumberOfLikes(numberOfLikes);
+                            assert userUid != null;
                             likes.put(userUid, true);
                         }
                         else{

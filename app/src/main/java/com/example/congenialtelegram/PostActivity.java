@@ -69,7 +69,7 @@ public class PostActivity extends AppCompatActivity {
         discardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(PostActivity.this, MainActivity.class));
+                PostActivity.this.finish();
             }
         });
 
@@ -150,8 +150,8 @@ public class PostActivity extends AppCompatActivity {
         randomString = Long.toString(rand);
 
         String caption = captionEdit.getText().toString().trim();
-        if(caption == null && url == null)
-            startActivity(new Intent(PostActivity.this, MainActivity.class));
+        if(caption.equals("") && url == null)
+            PostActivity.this.finish();
         else{
             Date date = new Date();
             PostModel postModel = new PostModel(randomString, firebaseUser.getUid(), caption, url, date);

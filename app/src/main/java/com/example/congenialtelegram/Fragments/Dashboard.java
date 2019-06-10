@@ -55,6 +55,7 @@ public class Dashboard extends Fragment {
     private void getPosts() {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        assert firebaseUser != null;
         final String userUid = firebaseUser.getUid();
         uids = new ArrayList<>();
 
@@ -84,6 +85,7 @@ public class Dashboard extends Fragment {
                     String profileImage = (String) dataSnapshot.child(id).child("profile_pic").getValue();
                     for(DataSnapshot ds: data.getChildren()){
                         PostModel post = ds.getValue(PostModel.class);
+                        assert post != null;
                         post.setAuthor(author);
                         post.setProfileImageUrl(profileImage);
                         posts.add(post);

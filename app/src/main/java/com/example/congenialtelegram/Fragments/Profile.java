@@ -45,9 +45,7 @@ public class Profile extends Fragment {
     private TextView aboutView;
     private TextView followerView;
     private TextView followingView;
-    private Button editProfile;
     private Context context;
-    private Button postButton;
 
     public Profile() {
         // Required empty public constructor
@@ -68,8 +66,8 @@ public class Profile extends Fragment {
         aboutView = view.findViewById(R.id.about);
         followerView = view.findViewById(R.id.followers);
         followingView = view.findViewById(R.id.following);
-        editProfile = view.findViewById(R.id.editProfile);
-        postButton = view.findViewById(R.id.postButton);
+        Button editProfile = view.findViewById(R.id.editProfile);
+        Button postButton = view.findViewById(R.id.postButton);
         context = view.getContext();
         posts = new ArrayList<>();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -102,7 +100,7 @@ public class Profile extends Fragment {
     private void setIntro() {
         final String uid = firebaseUser.getUid();
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String url = (String) dataSnapshot.child(uid).child("cover_pic").getValue();
@@ -167,6 +165,7 @@ public class Profile extends Fragment {
                 String profileImage = (String) dataSnapshot.child(uid).child("profile_pic").getValue();
                 for(DataSnapshot ds: data.getChildren()){
                     PostModel post = ds.getValue(PostModel.class);
+                    assert post != null;
                     post.setAuthor(author);
                     post.setProfileImageUrl(profileImage);
                     posts.add(post);
@@ -174,7 +173,7 @@ public class Profile extends Fragment {
                 Collections.sort(posts, new Comparator<PostModel>() {
                     @Override
                     public int compare(PostModel o1, PostModel o2) {
-                        return o2.getLastModifiedDate().compareTo(o1.getLastModifiedDate());
+                        return o2.getDate().compareTo(o1.getDate());
                     }
                 });
                 PostAdapter postAdapter = new PostAdapter(posts);
