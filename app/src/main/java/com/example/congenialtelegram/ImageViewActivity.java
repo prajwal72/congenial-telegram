@@ -10,6 +10,8 @@ import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 
+import java.util.Objects;
+
 public class ImageViewActivity extends AppCompatActivity {
     private int flag = 0;
 
@@ -19,7 +21,7 @@ public class ImageViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_image_view);
 
         Intent intent = getIntent();
-        String url = intent.getExtras().getString("url");
+        String url = Objects.requireNonNull(intent.getExtras()).getString("url");
         ImageView imageView = findViewById(R.id.image);
         final ImageView backButton = findViewById(R.id.backButton);
         RelativeLayout relativeLayout = findViewById(R.id.relativeLayout);

@@ -6,11 +6,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -30,6 +30,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.Random;
 
 public class ChangeProfilePictureActivity extends AppCompatActivity {
@@ -49,9 +50,14 @@ public class ChangeProfilePictureActivity extends AppCompatActivity {
 
         Button uploadButton = findViewById(R.id.uploadButton);
         Button removeButton = findViewById(R.id.removeButton);
-        TextView backButton = findViewById(R.id.backButton);
         profileImageView = findViewById(R.id.profileImage);
         progressBar = findViewById(R.id.progressBar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Change Profile Picture");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if(firebaseUser != null)
@@ -59,13 +65,6 @@ public class ChangeProfilePictureActivity extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference().child(uid);
 
         setImage();
-
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(ChangeProfilePictureActivity.this, MainActivity.class));
-            }
-        });
 
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,7 +98,7 @@ public class ChangeProfilePictureActivity extends AppCompatActivity {
     private void setImage() {
         progressBar.setVisibility(View.VISIBLE);
 
-        databaseReference.child("profile_pic").addValueEventListener(new ValueEventListener() {
+        databaseReference.child("profile_pic").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String url = (String) dataSnapshot.getValue();
@@ -192,5 +191,15 @@ public class ChangeProfilePictureActivity extends AppCompatActivity {
                         }
                     });
         }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        Intent intent = getIntent();
+        if(intent.getExtras() == null)
+            onBackPressed();
+        else
+            startActivity(new Intent(ChangeProfilePictureActivity.this, MainActivity.class));
+        return true;
     }
 }

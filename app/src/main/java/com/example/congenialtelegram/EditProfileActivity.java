@@ -6,13 +6,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.example.congenialtelegram.Models.PostModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -29,14 +29,12 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.Random;
 
 public class EditProfileActivity extends AppCompatActivity {
 
     private static final int REQ_CODE_IMAGE_INPUT = 1;
-    private Button updateCoverButton;
-    private Button updateProfilePictureButton;
-    private Button updateProfileButton;
     private EditText nameEdit;
     private EditText aboutEdit;
     private ProgressBar progressBar;
@@ -49,14 +47,21 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
-        updateCoverButton = findViewById(R.id.coverPic);
-        updateProfileButton = findViewById(R.id.updateButton);
-        updateProfilePictureButton = findViewById(R.id.profilePic);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        Button updateCoverButton = findViewById(R.id.coverPic);
+        Button updateProfileButton = findViewById(R.id.updateButton);
+        Button updateProfilePictureButton = findViewById(R.id.profilePic);
         nameEdit = findViewById(R.id.name);
         aboutEdit = findViewById(R.id.about);
         progressBar = findViewById(R.id.progressBar);
 
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Edit Profile");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        assert firebaseUser != null;
         uid = firebaseUser.getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference().child(uid);
 
@@ -180,5 +185,12 @@ public class EditProfileActivity extends AppCompatActivity {
         firebaseUser.updateProfile(request);
 
         Toast.makeText(EditProfileActivity.this, "Profile Updated", Toast.LENGTH_LONG).show();
+        startActivity(new Intent(EditProfileActivity.this, MainActivity.class));
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        startActivity(new Intent(EditProfileActivity.this, MainActivity.class));
+        return true;
     }
 }

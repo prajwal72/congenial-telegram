@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,7 +20,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -27,15 +27,13 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.Random;
 
 public class PostActivity extends AppCompatActivity {
 
     private static final int REQ_CODE_IMAGE_INPUT = 1;
     private EditText captionEdit;
-    private Button imageButton;
-    private Button postButton;
-    private Button discardButton;
     private ImageView imageView;
     private ProgressBar progressBar;
     private FirebaseUser firebaseUser;
@@ -49,13 +47,20 @@ public class PostActivity extends AppCompatActivity {
         setContentView(R.layout.activity_post);
 
         captionEdit = findViewById(R.id.caption);
-        imageButton = findViewById(R.id.uploadImageButton);
-        postButton = findViewById(R.id.postButton);
-        discardButton = findViewById(R.id.discardButton);
+        Button imageButton = findViewById(R.id.uploadImageButton);
+        Button postButton = findViewById(R.id.postButton);
+        Button discardButton = findViewById(R.id.discardButton);
         imageView = findViewById(R.id.image);
         progressBar = findViewById(R.id.progressBar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Create Account");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        assert firebaseUser != null;
         uid = firebaseUser.getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference().child(uid);
 
@@ -77,7 +82,6 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 postUpdate();
-                startActivity(new Intent(PostActivity.this, MainActivity.class));
             }
         });
     }
@@ -156,6 +160,7 @@ public class PostActivity extends AppCompatActivity {
             Date date = new Date();
             PostModel postModel = new PostModel(randomString, firebaseUser.getUid(), caption, url, date);
             databaseReference.child("posts").child(randomString).setValue(postModel);
+            startActivity(new Intent(PostActivity.this, MainActivity.class));
         }
     }
 }

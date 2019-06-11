@@ -95,13 +95,21 @@ public class ProfileActivity extends AppCompatActivity {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String url = (String) dataSnapshot.child(uid).child("cover_pic").getValue();
+                final String url = (String) dataSnapshot.child(uid).child("cover_pic").getValue();
                 if(url != null){
                     Uri uri = Uri.parse(url);
                     coverView.setBackground(null);
                     Glide.with(ProfileActivity.this)
                             .load(uri)
                             .into(coverView);
+                    coverView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(ProfileActivity.this, ImageViewActivity.class);
+                            intent.putExtra("url", url);
+                            startActivity(intent);
+                        }
+                    });
                 }
                 else {
                     Glide.with(ProfileActivity.this)
@@ -109,12 +117,20 @@ public class ProfileActivity extends AppCompatActivity {
                             .into(coverView);
                 }
 
-                String profileUrl = (String) dataSnapshot.child(uid).child("profile_pic").getValue();
+                final String profileUrl = (String) dataSnapshot.child(uid).child("profile_pic").getValue();
                 if(profileUrl != null){
                     Uri uri = Uri.parse(profileUrl);
                     Glide.with(ProfileActivity.this)
                             .load(uri)
                             .into(profilePicView);
+                    profilePicView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(ProfileActivity.this, ImageViewActivity.class);
+                            intent.putExtra("url", profileUrl);
+                            startActivity(intent);
+                        }
+                    });
                 }
                 else {
                     Glide.with(ProfileActivity.this)

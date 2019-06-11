@@ -6,19 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".ChangeProfilePictureActivity">
 
-    <TextView
-        android:id="@+id/backButton"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/back_to_dashboard"
-        android:gravity="end"
-        tools:layout_editor_absoluteY="0dp" />
+        app:titleTextColor="@color/white"
+        android:background="@color/colorPrimary" />
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/linearLayout"
-        android:layout_below="@+id/backButton">
+        android:layout_below="@+id/toolbar">
 
         <ImageView
             android:id="@+id/profileImage"

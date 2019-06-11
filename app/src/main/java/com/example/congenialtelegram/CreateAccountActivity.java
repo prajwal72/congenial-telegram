@@ -21,6 +21,8 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Objects;
+
 public class CreateAccountActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
@@ -42,7 +44,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Create Account");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Create Account");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -96,8 +98,8 @@ public class CreateAccountActivity extends AppCompatActivity {
                                     .build();
                             firebaseUser.updateProfile(request);
 
-                            verifyEmail();
                             Toast.makeText(CreateAccountActivity.this, "Account Created! Please verify your Email", Toast.LENGTH_LONG).show();
+                            verifyEmail();
                             startActivity(new Intent(CreateAccountActivity.this, LoginActivity.class));
                         }
                         else{

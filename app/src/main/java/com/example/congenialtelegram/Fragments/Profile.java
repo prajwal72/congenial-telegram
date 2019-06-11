@@ -1,5 +1,6 @@
 package com.example.congenialtelegram.Fragments;
 
+
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.congenialtelegram.Adapters.PostAdapter;
 import com.example.congenialtelegram.EditProfileActivity;
+import com.example.congenialtelegram.ImageViewActivity;
 import com.example.congenialtelegram.Models.PostModel;
 import com.example.congenialtelegram.PostActivity;
 import com.example.congenialtelegram.R;
@@ -103,13 +105,21 @@ public class Profile extends Fragment {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String url = (String) dataSnapshot.child(uid).child("cover_pic").getValue();
+                final String url = (String) dataSnapshot.child(uid).child("cover_pic").getValue();
                 if(url != null){
                     Uri uri = Uri.parse(url);
                     coverView.setBackground(null);
                     Glide.with(context)
                             .load(uri)
                             .into(coverView);
+                    coverView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(context, ImageViewActivity.class);
+                            intent.putExtra("url", url);
+                            context.startActivity(intent);
+                        }
+                    });
                 }
                 else {
                     Glide.with(context)
@@ -117,12 +127,20 @@ public class Profile extends Fragment {
                             .into(coverView);
                 }
 
-                String profileUrl = (String) dataSnapshot.child(uid).child("profile_pic").getValue();
+                final String profileUrl = (String) dataSnapshot.child(uid).child("profile_pic").getValue();
                 if(profileUrl != null){
                     Uri uri = Uri.parse(profileUrl);
                     Glide.with(context)
                             .load(uri)
                             .into(profilePicView);
+                    profilePicView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(context, ImageViewActivity.class);
+                            intent.putExtra("url", profileUrl);
+                            context.startActivity(intent);
+                        }
+                    });
                 }
                 else {
                     Glide.with(context)
