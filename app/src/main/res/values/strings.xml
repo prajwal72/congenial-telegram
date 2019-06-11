@@ -38,4 +38,7 @@
     <string name="discard">DISCARD</string>
     <string name="forgot_password">Forgot Password?</string>
     <string name="users">Users</string>
+    <string name="change_password">Change Password</string>
+    <string name="log_out">Log Out</string>
+    <string name="cancel">Cancel</string>
 </resources>

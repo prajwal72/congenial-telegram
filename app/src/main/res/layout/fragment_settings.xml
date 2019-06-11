@@ -1,28 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.Settings">
+    tools:context=".Fragments.Settings"
+    android:orientation="vertical">
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="154dp"
-        android:layout_marginBottom="334dp"
-        android:text="Button" />
+        android:background="@color/colorPrimary"
+        android:textColor="@color/white"
+        android:padding="8dp"
+        android:textSize="20sp"
+        android:layout_marginBottom="20dp"
+        android:text="@string/settings"/>
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
+    <!--<TextView-->
+        <!--android:id="@+id/changePassword"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textSize="20sp"-->
+        <!--android:layout_margin="8dp"-->
+        <!--android:text="@string/change_password"/>-->
+
+    <TextView
+        android:id="@+id/logOut"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/button"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="232dp"
-        android:layout_marginBottom="-138dp"
-        android:text="Button" />
+        android:textSize="20sp"
+        android:layout_margin="8dp"
+        android:text="@string/log_out"/>
 
-</RelativeLayout>
+</LinearLayout>
