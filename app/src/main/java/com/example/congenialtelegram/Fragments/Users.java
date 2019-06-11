@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,8 +42,10 @@ public class Users extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_users, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
+
         userModels = new ArrayList<>();
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
 
         getUsers();
 
@@ -53,6 +55,7 @@ public class Users extends Fragment {
     private void getUsers() {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        assert firebaseUser != null;
         final String userUid = firebaseUser.getUid();
 
         final Map<String, Boolean> map = new HashMap<>();
@@ -62,6 +65,7 @@ public class Users extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds: dataSnapshot.getChildren()){
                     String uid = (String) ds.getValue();
+                    assert uid != null;
                     map.put(uid, true);
                 }
             }
@@ -78,13 +82,13 @@ public class Users extends Fragment {
                 DataSnapshot data = dataSnapshot.child("users");
                 for(DataSnapshot ds: data.getChildren()){
                     String uid = (String) ds.getValue();
+                    assert uid != null;
                     if(uid.equals(userUid))
                         continue;
                     if(map.containsKey(uid))
                         userModels.add(new UserModel(uid,true));
                     else
                         userModels.add(new UserModel(uid,false));
-                    Log.e(" as",uid);
                 }
                 UserAdapter userAdapter = new UserAdapter(userModels);
                 recyclerView.setAdapter(userAdapter);

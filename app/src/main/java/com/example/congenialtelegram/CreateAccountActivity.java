@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,9 +36,15 @@ public class CreateAccountActivity extends AppCompatActivity {
         final EditText mobileView = findViewById(R.id.signup_mobile);
         final EditText passwordView = findViewById(R.id.signup_password);
         final EditText confirmPasswordView = findViewById(R.id.confirm_signup_password);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         Button signUpButton = findViewById(R.id.signup_button);
         TextView signInButton = findViewById(R.id.back_button);
         progressBar = findViewById(R.id.progressBar);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Create Account");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -111,7 +118,7 @@ public class CreateAccountActivity extends AppCompatActivity {
             return false;
         }
 
-        if(password1.length() < 8){
+        if(password1.length() < 6){
             Toast.makeText(this,"Password should be minimum 8 characters", Toast.LENGTH_LONG).show();
             return false;
         }
@@ -128,5 +135,11 @@ public class CreateAccountActivity extends AppCompatActivity {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if(firebaseUser != null)
             firebaseUser.sendEmailVerification();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

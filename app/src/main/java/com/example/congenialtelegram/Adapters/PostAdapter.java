@@ -101,7 +101,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         viewHolder.profileImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(postModels.get(index).getImageUrl() != null){
+                if(postModels.get(index).getProfileImageUrl() != null){
                     Intent intent = new Intent(context, ImageViewActivity.class);
                     intent.putExtra("url", postModels.get(index).getProfileImageUrl());
                     context.startActivity(intent);
@@ -136,6 +136,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         Map<String, Boolean> likes = postModels.get(index).getLikes();
         if(likes.containsKey(userUid)){
             viewHolder.likeButton.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_liked));
+        }else{
+            viewHolder.likeButton.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_like));
         }
 
         final boolean[] liked = new boolean[1];
@@ -208,7 +210,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         private ImageButton commentButton;
         private ImageButton shareButton;
 
-        public ViewHolder(@NonNull View itemView, Context context, ArrayList<PostModel> postModels) {
+        private ViewHolder(@NonNull View itemView, Context context, ArrayList<PostModel> postModels) {
             super(itemView);
             authorView = itemView.findViewById(R.id.author);
             dateView = itemView.findViewById(R.id.date);

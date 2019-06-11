@@ -4,30 +4,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.congenialtelegram.Models.PostModel;
 import com.example.congenialtelegram.Models.UserModel;
 import com.example.congenialtelegram.ProfileActivity;
 import com.example.congenialtelegram.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.MutableData;
-import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -124,7 +117,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         private ImageButton followButton;
         private ImageButton checkButton;
 
-        public ViewHolder(@NonNull View itemView, Context context, ArrayList<UserModel> userModels) {
+        private ViewHolder(@NonNull View itemView, Context context, ArrayList<UserModel> userModels) {
             super(itemView);
             authorView = itemView.findViewById(R.id.author);
             profileImageView = itemView.findViewById(R.id.profileImage);
@@ -134,7 +127,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         }
     }
 
-    public void follow(@NonNull final UserAdapter.ViewHolder viewHolder, final String uid, int index){
+    private void follow(@NonNull final UserAdapter.ViewHolder viewHolder, final String uid, int index){
         viewHolder.followButton.setVisibility(View.GONE);
         viewHolder.followButton.setEnabled(false);
         viewHolder.checkButton.setVisibility(View.VISIBLE);
@@ -158,7 +151,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         userModels.set(index, new UserModel(uid, true));
     }
 
-    public void unfollow(@NonNull final UserAdapter.ViewHolder viewHolder, final String uid, int index){
+    private void unfollow(@NonNull final UserAdapter.ViewHolder viewHolder, final String uid, int index){
         viewHolder.followButton.setVisibility(View.VISIBLE);
         viewHolder.followButton.setEnabled(true);
         viewHolder.checkButton.setVisibility(View.GONE);
