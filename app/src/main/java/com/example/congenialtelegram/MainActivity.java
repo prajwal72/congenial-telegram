@@ -29,9 +29,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        loadFragment(Dashboard.newInstance());
-
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        Intent intent = getIntent();
+        if(intent.getExtras() == null)
+            loadFragment(Dashboard.newInstance());
+        else {
+            loadFragment(Profile.newInstance());
+            bottomNavigationView.setSelectedItemId(R.id.profile);
+        }
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {

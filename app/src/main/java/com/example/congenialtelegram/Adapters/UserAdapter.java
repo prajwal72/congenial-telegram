@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.congenialtelegram.ImageViewActivity;
 import com.example.congenialtelegram.Models.UserModel;
 import com.example.congenialtelegram.ProfileActivity;
 import com.example.congenialtelegram.R;
@@ -52,13 +53,21 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String author = (String) dataSnapshot.child("name").getValue();
-                String profileImage = (String) dataSnapshot.child("profile_pic").getValue();
+                final String profileImage = (String) dataSnapshot.child("profile_pic").getValue();
                 viewHolder.authorView.setText(author);
                 if(profileImage != null){
                     Uri uri = Uri.parse(profileImage);
                     Glide.with(context)
                             .load(uri)
                             .into(viewHolder.profileImageView);
+                    viewHolder.profileImageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(context, ImageViewActivity.class);
+                            intent.putExtra("url", profileImage);
+                            context.startActivity(intent);
+                        }
+                    });
                 }
                 else{
                     Glide.with(context)

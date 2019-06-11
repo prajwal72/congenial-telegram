@@ -185,12 +185,23 @@ public class EditProfileActivity extends AppCompatActivity {
         firebaseUser.updateProfile(request);
 
         Toast.makeText(EditProfileActivity.this, "Profile Updated", Toast.LENGTH_LONG).show();
-        startActivity(new Intent(EditProfileActivity.this, MainActivity.class));
+        Intent intent = new Intent(EditProfileActivity.this, MainActivity.class);
+        intent.putExtra("key", true);
+        startActivity(intent);
     }
 
     @Override
     public boolean onSupportNavigateUp() {
-        startActivity(new Intent(EditProfileActivity.this, MainActivity.class));
+        Intent intent = new Intent(EditProfileActivity.this, MainActivity.class);
+        intent.putExtra("key", true);
+        startActivity(intent);
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(EditProfileActivity.this, MainActivity.class);
+        intent.putExtra("key", true);
+        startActivity(intent);
     }
 }

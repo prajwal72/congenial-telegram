@@ -160,7 +160,9 @@ public class PostActivity extends AppCompatActivity {
             Date date = new Date();
             PostModel postModel = new PostModel(randomString, firebaseUser.getUid(), caption, url, date);
             databaseReference.child("posts").child(randomString).setValue(postModel);
-            startActivity(new Intent(PostActivity.this, MainActivity.class));
+            Intent intent = new Intent(PostActivity.this, MainActivity.class);
+            intent.putExtra("key", true);
+            startActivity(intent);
         }
     }
 }
