@@ -133,13 +133,15 @@ public class LoginActivity extends AppCompatActivity {
 
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                                        progressBar.setVisibility(View.INVISIBLE);
                                     }
                                 });
                             }
                         }
-                        else
+                        else{
                             Toast.makeText(LoginActivity.this,"Incorrect email id or Password", Toast.LENGTH_LONG).show();
+                            progressBar.setVisibility(View.INVISIBLE);
+                        }
                     }
                 });
     }

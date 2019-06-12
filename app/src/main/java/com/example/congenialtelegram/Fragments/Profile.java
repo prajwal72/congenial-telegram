@@ -70,6 +70,7 @@ public class Profile extends Fragment {
         followingView = view.findViewById(R.id.following);
         Button editProfile = view.findViewById(R.id.editProfile);
         Button postButton = view.findViewById(R.id.postButton);
+
         context = view.getContext();
         posts = new ArrayList<>();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();

@@ -115,27 +115,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         });
     }
 
-    @Override
-    public int getItemCount() {
-        return userModels.size();
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        private ImageView profileImageView;
-        private TextView authorView;
-        private ImageButton followButton;
-        private ImageButton checkButton;
-
-        private ViewHolder(@NonNull View itemView, Context context, ArrayList<UserModel> userModels) {
-            super(itemView);
-            authorView = itemView.findViewById(R.id.author);
-            profileImageView = itemView.findViewById(R.id.profileImage);
-            followButton = itemView.findViewById(R.id.followButton);
-            checkButton = itemView.findViewById(R.id.checkButton);
-            checkButton.setEnabled(false);
-        }
-    }
-
     private void follow(@NonNull final UserAdapter.ViewHolder viewHolder, final String uid, int index){
         viewHolder.followButton.setVisibility(View.GONE);
         viewHolder.followButton.setEnabled(false);
@@ -182,5 +161,26 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
             }
         });
+    }
+
+    @Override
+    public int getItemCount() {
+        return userModels.size();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        private ImageView profileImageView;
+        private TextView authorView;
+        private ImageButton followButton;
+        private ImageButton checkButton;
+
+        private ViewHolder(@NonNull View itemView, Context context, ArrayList<UserModel> userModels) {
+            super(itemView);
+            authorView = itemView.findViewById(R.id.author);
+            profileImageView = itemView.findViewById(R.id.profileImage);
+            followButton = itemView.findViewById(R.id.followButton);
+            checkButton = itemView.findViewById(R.id.checkButton);
+            checkButton.setEnabled(false);
+        }
     }
 }

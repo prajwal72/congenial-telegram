@@ -16,6 +16,7 @@ public class PostModel {
     public int numberOfLikes = 0;
     public int numberOfComments = 0;
     public Map<String, Boolean> likes = new HashMap<>();
+    public Map<String, CommentModel> comments = new HashMap<>();
 
     public PostModel(){
 
