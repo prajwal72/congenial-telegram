@@ -23,6 +23,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -158,9 +159,47 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
 
-
-
         progressBar.setVisibility(View.INVISIBLE);
+
+        databaseReference.child(uid).child("message").child(userUid).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                if(messageAdapter != null){
+                    MessageModel message = dataSnapshot.getValue(MessageModel.class);
+                    assert message != null;
+                    if (!message.getRead()) {
+                        message.setRead(true);
+                        dataSnapshot.child("isRead").getRef().setValue(true);
+                    }
+                    message.setSender(false);
+                    if(!messageModels.contains(message)){
+                        messageModels.add(message);
+                        messageAdapter.notifyDataSetChanged();
+                        recyclerView.scrollToPosition(messageAdapter.getItemCount() - 1);
+                    }
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void chooseImage() {
@@ -234,6 +273,11 @@ public class MessageActivity extends AppCompatActivity {
                         }
                     });
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     @Override
