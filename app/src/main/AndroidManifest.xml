@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MessageActivity"></activity>
+        <activity android:name=".MessageActivity"
+            android:parentActivityName=".MainActivity"/>
         <activity android:name=".ImageViewActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".PostActivity" />

@@ -33,7 +33,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     public CommentAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         context = viewGroup.getContext();
         View view = LayoutInflater.from(context).inflate(R.layout.comment_card, viewGroup, false);
-        return new CommentAdapter.ViewHolder(view, context, commentModels);
+        return new CommentAdapter.ViewHolder(view);
     }
 
     @Override
@@ -91,7 +91,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         private TextView commentView;
         private ImageView imageView;
 
-        public ViewHolder(@NonNull View itemView, Context context, ArrayList<CommentModel> commentModels) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
             authorView = itemView.findViewById(R.id.author);
             commentView = itemView.findViewById(R.id.commentText);

@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -46,6 +45,7 @@ public class MessageActivity extends AppCompatActivity {
     private static final int REQ_CODE_IMAGE_INPUT = 1;
     private String uid;
     private String userUid;
+    private String userName;
     private ImageView addButton;
     private EditText messageEdit;
     private Button sendButton;
@@ -79,6 +79,7 @@ public class MessageActivity extends AppCompatActivity {
 
         messageModels = new ArrayList<>();
         userUid = FirebaseAuth.getInstance().getUid();
+        userName = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getDisplayName();
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
         populateMessage();
@@ -102,6 +103,8 @@ public class MessageActivity extends AppCompatActivity {
                     Date date = new Date();
                     MessageModel messageModel= new MessageModel(message, null, date);
                     databaseReference.child(uid).child("message").child(userUid).child(randomString).setValue(messageModel);
+                    databaseReference.child(uid).child("notify").child(userUid).child("notify").setValue(true);
+                    databaseReference.child(uid).child("notify").child(userUid).child("userName").setValue(userName);
                     messageModel.setSender(true);
                     messageModels.add(messageModel);
                     messageAdapter.notifyDataSetChanged();
@@ -159,9 +162,11 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
 
+        databaseReference.child(userUid).child("notify").child(uid).child("notify").setValue(false);
+
         progressBar.setVisibility(View.INVISIBLE);
 
-        databaseReference.child(uid).child("message").child(userUid).addChildEventListener(new ChildEventListener() {
+        databaseReference.child(userUid).child("message").child(uid).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 if(messageAdapter != null){
@@ -175,6 +180,7 @@ public class MessageActivity extends AppCompatActivity {
                     if(!messageModels.contains(message)){
                         messageModels.add(message);
                         messageAdapter.notifyDataSetChanged();
+                        databaseReference.child(userUid).child("notify").child(uid).child("notify").setValue(false);
                         recyclerView.scrollToPosition(messageAdapter.getItemCount() - 1);
                     }
                 }
@@ -261,6 +267,8 @@ public class MessageActivity extends AppCompatActivity {
                             addButton.setEnabled(true);
                             messageEdit.setEnabled(true);
                             sendButton.setEnabled(true);
+                            databaseReference.child(uid).child("notify").child(userUid).child("notify").setValue(true);
+                            databaseReference.child(uid).child("notify").child(userUid).child("userName").setValue(userName);
                         }
                     })
                     .addOnFailureListener(MessageActivity.this, new OnFailureListener() {

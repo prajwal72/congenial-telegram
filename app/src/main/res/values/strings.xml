@@ -43,4 +43,6 @@
     <string name="cancel">Cancel</string>
     <string name="send">SEND</string>
     <string name="type_a_message">Type a message</string>
+    <string name="channel_name">notify</string>
+    <string name="channel_description">message</string>
 </resources>

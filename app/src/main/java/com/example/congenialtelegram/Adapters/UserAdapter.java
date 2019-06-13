@@ -41,7 +41,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     public UserAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         context = viewGroup.getContext();
         View view = LayoutInflater.from(context).inflate(R.layout.user_card, viewGroup, false);
-        return new ViewHolder(view, context, userModels);
+        return new ViewHolder(view);
     }
 
     @Override
@@ -174,7 +174,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         private ImageButton followButton;
         private ImageButton checkButton;
 
-        private ViewHolder(@NonNull View itemView, Context context, ArrayList<UserModel> userModels) {
+        private ViewHolder(@NonNull View itemView) {
             super(itemView);
             authorView = itemView.findViewById(R.id.author);
             profileImageView = itemView.findViewById(R.id.profileImage);

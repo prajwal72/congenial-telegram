@@ -19,12 +19,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.congenialtelegram.ImageViewActivity;
-import com.example.congenialtelegram.MainActivity;
 import com.example.congenialtelegram.Models.CommentModel;
 import com.example.congenialtelegram.Models.PostModel;
 import com.example.congenialtelegram.ProfileActivity;
@@ -70,7 +68,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         context = viewGroup.getContext();
         View view = LayoutInflater.from(context).inflate(R.layout.post, viewGroup, false);
-        return new ViewHolder(view, context, postModels);
+        return new ViewHolder(view);
     }
 
     @Override
@@ -412,13 +410,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                             @Override
                             public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
                                 progressDialog.dismiss();
-                                String message = caption;
                                 Uri uri = FileProvider.getUriForFile(context, "com.example.congenialtelegram.provider", localFile);
                                 Intent share = new Intent(Intent.ACTION_SEND);
                                 share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                                 share.putExtra(Intent.EXTRA_STREAM, uri);
                                 share.setType("image/*");
-                                share.putExtra(Intent.EXTRA_TEXT, message);
+                                share.putExtra(Intent.EXTRA_TEXT, caption);
 
                                 context.startActivity(Intent.createChooser(share, "Share"));
                             }
@@ -462,7 +459,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         private ImageButton commentButton;
         private ImageButton shareButton;
 
-        private ViewHolder(@NonNull View itemView, Context context, ArrayList<PostModel> postModels) {
+        private ViewHolder(@NonNull View itemView) {
             super(itemView);
             authorView = itemView.findViewById(R.id.author);
             dateView = itemView.findViewById(R.id.date);
