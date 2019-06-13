@@ -9,7 +9,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -42,10 +41,10 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView followerView;
     private TextView followingView;
     private ImageView followButton;
-    private ImageView messageButton;
     private String uid;
     private boolean bool;
     private String userUid;
+    private String userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +64,7 @@ public class ProfileActivity extends AppCompatActivity {
         followerView = findViewById(R.id.followers);
         followingView = findViewById(R.id.following);
         followButton = findViewById(R.id.followButton);
-        messageButton = findViewById(R.id.messageButton);
+        ImageView messageButton = findViewById(R.id.messageButton);
         userUid = FirebaseAuth.getInstance().getUid();
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -80,6 +79,16 @@ public class ProfileActivity extends AppCompatActivity {
                     follow();
 
                 bool = !bool;
+            }
+        });
+
+        messageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfileActivity.this, MessageActivity.class);
+                intent.putExtra("name", userName);
+                intent.putExtra("uid", uid);
+                startActivity(intent);
             }
         });
 
@@ -139,8 +148,8 @@ public class ProfileActivity extends AppCompatActivity {
                             .into(profilePicView);
                 }
 
-                String name = (String) dataSnapshot.child(uid).child("name").getValue();
-                nameView.setText(name);
+                userName = (String) dataSnapshot.child(uid).child("name").getValue();
+                nameView.setText(userName);
 
                 String about = (String) dataSnapshot.child(uid).child("about").getValue();
                 if(about != null)

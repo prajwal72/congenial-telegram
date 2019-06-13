@@ -41,4 +41,6 @@
     <string name="change_password">Change Password</string>
     <string name="log_out">Log Out</string>
     <string name="cancel">Cancel</string>
+    <string name="send">SEND</string>
+    <string name="type_a_message">Type a message</string>
 </resources>
