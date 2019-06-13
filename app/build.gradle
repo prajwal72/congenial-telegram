@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 28
@@ -41,5 +42,8 @@ dependencies {
 
     // Circular Image View
     implementation 'de.hdodenhof:circleimageview:3.0.0'
+
+    // Crashlytics
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
 }
 apply plugin: 'com.google.gms.google-services'
