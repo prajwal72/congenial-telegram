@@ -1,12 +1,14 @@
 package com.example.congenialtelegram.Adapters;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,14 +19,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.congenialtelegram.ImageViewActivity;
+import com.example.congenialtelegram.MainActivity;
 import com.example.congenialtelegram.Models.CommentModel;
 import com.example.congenialtelegram.Models.PostModel;
 import com.example.congenialtelegram.ProfileActivity;
 import com.example.congenialtelegram.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,7 +39,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -74,6 +85,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         setInfoBar(viewHolder, index);
         setLikeButton(viewHolder, index);
         setCommentButton(viewHolder, index);
+        setShareButton(viewHolder, index);
     }
 
     private void setProfilePicture(ViewHolder viewHolder, final int index) {
@@ -380,6 +392,57 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 });
             }
         });
+    }
+
+    private void setShareButton(ViewHolder viewHolder, int index) {
+        final String caption = postModels.get(index).getCaption();
+        final String imageUrl = postModels.get(index).getImageUrl();
+        if(imageUrl != null) {
+            final StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl);
+            try {
+                final File localFile = File.createTempFile("images", ".jpg");
+                viewHolder.shareButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final ProgressDialog progressDialog = new ProgressDialog(context);
+                        progressDialog.setCancelable(false);
+                        progressDialog.setMessage("Opening Menu");
+                        progressDialog.show();
+                        storageRef.getFile(localFile).addOnCompleteListener(new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
+                                progressDialog.dismiss();
+                                String message = caption;
+                                Uri uri = FileProvider.getUriForFile(context, "com.example.congenialtelegram.provider", localFile);
+                                Intent share = new Intent(Intent.ACTION_SEND);
+                                share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                share.putExtra(Intent.EXTRA_STREAM, uri);
+                                share.setType("image/*");
+                                share.putExtra(Intent.EXTRA_TEXT, message);
+
+                                context.startActivity(Intent.createChooser(share, "Share"));
+                            }
+                        });
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            viewHolder.shareButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String message = caption;
+                    Intent share = new Intent(Intent.ACTION_SEND);
+                    share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    share.setType("text/*");
+                    share.putExtra(Intent.EXTRA_TEXT, message);
+
+                    context.startActivity(Intent.createChooser(share, "Share"));
+                }
+            });
+        }
     }
 
     @Override
