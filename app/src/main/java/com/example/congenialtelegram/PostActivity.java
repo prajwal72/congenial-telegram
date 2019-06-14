@@ -55,7 +55,7 @@ public class PostActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setTitle("Create Account");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Write a Post");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -164,5 +164,11 @@ public class PostActivity extends AppCompatActivity {
             intent.putExtra("key", true);
             startActivity(intent);
         }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

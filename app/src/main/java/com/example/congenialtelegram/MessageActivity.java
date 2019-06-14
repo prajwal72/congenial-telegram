@@ -175,13 +175,13 @@ public class MessageActivity extends AppCompatActivity {
                     if (!message.getRead()) {
                         message.setRead(true);
                         dataSnapshot.child("isRead").getRef().setValue(true);
-                    }
-                    message.setSender(false);
-                    if(!messageModels.contains(message)){
-                        messageModels.add(message);
-                        messageAdapter.notifyDataSetChanged();
-                        databaseReference.child(userUid).child("notify").child(uid).child("notify").setValue(false);
-                        recyclerView.scrollToPosition(messageAdapter.getItemCount() - 1);
+                        message.setSender(false);
+                        if (!messageModels.contains(message)) {
+                            messageModels.add(message);
+                            messageAdapter.notifyDataSetChanged();
+                            databaseReference.child(userUid).child("notify").child(uid).child("notify").setValue(false);
+                            recyclerView.scrollToPosition(messageAdapter.getItemCount() - 1);
+                        }
                     }
                 }
             }

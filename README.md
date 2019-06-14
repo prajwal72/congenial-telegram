@@ -16,7 +16,7 @@ After cloning the project, you need to replace the existing Firebase json file w
 2. Click on **New Project**. A dialog box opens up. Give a suitable name and click on **Create Project**.
 3. In the new window, where you have to select the platform in which you want to add Firebase, select *Android*.
 4. Register app window opens. Fill the details.  
-  **Package Name :** *com.example.android.congenialtelgram*    
+  **Package Name :** *com.example.android.congenialtelegram*    
   **App Nickname :** *Congenial Telegram*    
 5. Click on Register App button. 
 6. Download the json file and put it in the app directory.
